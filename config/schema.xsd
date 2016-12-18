@@ -1,0 +1,13 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <xsd:element name="cars" />
+
+<xsd:element name="car">
+ <xsd:complexType>
+   <xsd:attribute name="brand" type="xsd:string" use="required"/>
+   <xsd:attribute name="parkinglotid" type="xsd:decimal" use="required"/>
+   <xsd:attribute name="licenseplate" type="xsd:string"  use="required"/>
+   <xsd:attribute name="parkingtime" type="xsd:dateTime" use="required"/>
+ </xsd:complexType>
+</xsd:element>
+
+</xsd:schema>
