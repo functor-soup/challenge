@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<shows>
+    <show name="Ricky and Morty" type="1" hero="rick" />
+    <show name="The Office" type="1" />
+    <show name="Full Metal Alchemist" type="2" />
+    <show name="Supernatural" type="1" />
+    <show name="The Whitest kids you know" type="3" />
+</shows>
