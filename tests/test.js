@@ -54,6 +54,18 @@ describe("Utils test", function() {
 
     });
 
+    describe("Business logic specific validation function tests", function() {
+        const input = ["1", "2", "2", "3", "3", "4"];
+        it("it should not exceed a count, should return true", function() {
+            assert.equal(utils.validateJson(input, 3), true);
+        })
+
+        it("it should not exceed a count, should return false", function() {
+            assert.equal(utils.validateJson(input, 1), false);
+        })
+
+
+    });
 
 
 });
