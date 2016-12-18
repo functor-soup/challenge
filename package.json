@@ -1,0 +1,30 @@
+{
+  "name": "challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/functor-soup/challenge.git"
+  },
+  "author": "functor-soup",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/functor-soup/challenge/issues"
+  },
+  "homepage": "https://github.com/functor-soup/challenge#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "monet": "^0.8.10",
+    "ramda": "^0.22.1",
+    "xml2json-light": "^1.0.4",
+    "xmllint": "^0.1.1"
+  }
+}
