@@ -1,3 +1,5 @@
+https://travis-ci.org/functor-soup/challenge.svg?branch=master
+
 ### General Software Goals
 
  - Make sure no invalid state enters the core
