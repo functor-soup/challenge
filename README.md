@@ -1,4 +1,4 @@
-https://travis-ci.org/functor-soup/challenge.svg?branch=master
+[![Build Status](https://travis-ci.org/functor-soup/challenge.svg?branch=master)](https://travis-ci.org/functor-soup/challenge)
 
 ### General Software Goals
 
