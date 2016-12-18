@@ -25,6 +25,7 @@
     "monet": "^0.8.10",
     "ramda": "^0.22.1",
     "xml2json-light": "^1.0.4",
-    "xmllint": "^0.1.1"
+    "xmllint": "^0.1.1",
+    "yargs": "^6.5.0"
   }
 }
