@@ -12,45 +12,48 @@ describe("Utils test", function() {
     const xmlString = fs.readFileSync("./tests/test.xml").toString();
     const incorrectXmlString = fs.readFileSync("./tests/incorrect_xml.xml").toString();
 
-    it("Schema valid Xml should return a right with the xml string", function() {
-        assert.deepEqual(utils.validateXML(schemaString, xmlString), E.Right(xmlString));
+    describe("Schema-validation utility tests", function() {
+        it("Schema valid Xml should return a right with the xml string", function() {
+            assert.deepEqual(utils.validateXML(schemaString, xmlString), E.Right(xmlString));
 
-    });
+        });
 
-    it("Schema invalid Xml should return a left", function() {
-        assert.equal(utils.validateXML(schemaString, incorrectXmlString).isLeft(), true);
+        it("Schema invalid Xml should return a left", function() {
+            assert.equal(utils.validateXML(schemaString, incorrectXmlString).isLeft(), true);
 
-    });
+        });
 
-    it("Value-valid should return a right given custom validation function", function() {
+    })
+
+    describe("JSON has to be validated in terms of some business rules", function() {
         const lensPath = R.lensPath(['shows', 'show'])
-        const lens = R.lensPath(['type']);
-        const validation = function(y) {
-            return 3 == y.filter(function(x) {
-                return x == "1"
-            }).length;
-        };
-
+        const lens = R.lensProp('type');
         const x = parseString(xmlString)
         const view = R.view(lensPath, x);
-        const output = utils.validateAttributeValue(view, lens, validation, "error msg");
-        assert.deepEqual(output, E.Right(view));
 
-    });
+        it("Value-valid JSON should return a right given custom validation function", function() {
+            const validation = function(y) {
+                return 3 == y.filter(function(x) {
+                    return x == "1"
+                }).length;
+            };
 
-    it("Value-invalid should return a left given custom validation function", function() {
-        const lensPath = R.lensPath(['shows', 'show'])
-        const lens = R.lensPath(['type']);
-        const validation = function(y) {
-            return 5 == y.filter(function(x) {
-                return x == "1"
-            }).length;
-        };
+            const output = utils.validateAttributeValue(view, lens, validation, "error msg");
+            assert.deepEqual(output, E.Right(view));
 
-        const x = parseString(xmlString)
-        const view = R.view(lensPath, x);
-        const output = utils.validateAttributeValue(view, lens, validation, "error msg");
-        assert.deepEqual(output, E.Left("error msg"));
+        });
+
+        it("Value-invalid JSON should return a left given custom validation function", function() {
+            const validation = function(y) {
+                return 5 == y.filter(function(x) {
+                    return x == "1"
+                }).length;
+            };
+
+            const output = utils.validateAttributeValue(view, lens, validation, "error msg");
+            assert.deepEqual(output, E.Left("error msg"));
+
+        });
 
     });
 
