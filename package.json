@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "fantasy-tuples": "^1.0.0",
-    "moment": "^2.17.1",
+    "js-joda": "^1.1.17",
     "monet": "^0.8.10",
     "ramda": "^0.22.1",
     "xml2json-light": "^1.0.4",
