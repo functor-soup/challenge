@@ -5,7 +5,7 @@ const utils = require("../lib/utils.js");
 const assert = require("chai").assert;
 const fs = require("fs");
 const parseString = require('xml2json-light').xml2json;
-
+const moment = require("moment");
 
 describe("Utils test", function() {
     const schemaString = fs.readFileSync("./tests/test_schema.xsd").toString();
@@ -59,6 +59,8 @@ describe("Utils test", function() {
 
     describe("Business logic specific validation function tests", function() {
         const input = ["1", "2", "2", "3", "3", "4"];
+	const testInputDates = [moment("2016-12-25"), moment("2016-12-1")];
+
         it("it should not exceed a count, should return true", function() {
             assert.equal(utils.validateJson(input, 3), true);
         })
@@ -67,6 +69,15 @@ describe("Utils test", function() {
             assert.equal(utils.validateJson(input, 1), false);
         })
 
+        it("should not have dates before given certain date should return true", function() {
+                        const testDateTime = moment("2010-01-01");
+            assert.equal(utils.validateJsonDates(testInputDates, testDateTime), true);
+        })
+
+        it("should not have dates before given certain date should return false", function() {
+            const testDateTime = moment("2016-12-5");
+            assert.equal(utils.validateJsonDates(testInputDates, testDateTime), false);
+        })
 
     });
 
