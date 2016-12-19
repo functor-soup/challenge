@@ -22,6 +22,7 @@
     "mocha": "^3.2.0"
   },
   "dependencies": {
+    "fantasy-tuples": "^1.0.0",
     "moment": "^2.17.1",
     "monet": "^0.8.10",
     "ramda": "^0.22.1",
