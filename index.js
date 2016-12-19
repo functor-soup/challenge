@@ -38,7 +38,7 @@ try {
     process.exit(1);
 };
 
-const validate = R.curry(utils.validateJson)(R.__)(23);
+const validate = R.curry(utils.validateJson)(R.__)(config.maxSpaces);
 
 const state = utils.validateXML(fileStrings[0], fileStrings[1])
     .bind(function(xmlString) {
