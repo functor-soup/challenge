@@ -5,7 +5,10 @@ const utils = require("../lib/utils.js");
 const assert = require("chai").assert;
 const fs = require("fs");
 const parseString = require('xml2json-light').xml2json;
-const moment = require("moment");
+const joda = require("js-joda");
+const LocalDateTime = joda.LocalDateTime;
+const Hours = joda.ChronoUnit.HOURS;
+const T = require('fantasy-tuples');
 
 describe("Utils test", function() {
     const schemaString = fs.readFileSync("./tests/test_schema.xsd").toString();
@@ -59,7 +62,8 @@ describe("Utils test", function() {
 
     describe("Business logic specific validation function tests", function() {
         const input = ["1", "2", "2", "3", "3", "4"];
-	const testInputDates = [moment("2016-12-25"), moment("2016-12-1")];
+        const testInputDates = [LocalDateTime.parse("2016-12-25T09:42"), 
+		LocalDateTime.parse("2016-12-01T09:42")];
 
         it("it should not exceed a count, should return true", function() {
             assert.equal(utils.validateJson(input, 3), true);
@@ -70,13 +74,54 @@ describe("Utils test", function() {
         })
 
         it("should not have dates before given certain date should return true", function() {
-                        const testDateTime = moment("2010-01-01");
+            const testDateTime = LocalDateTime.parse("2010-01-01T09:42");
             assert.equal(utils.validateJsonDates(testInputDates, testDateTime), true);
         })
 
         it("should not have dates before given certain date should return false", function() {
-            const testDateTime = moment("2016-12-5");
+            const testDateTime =  LocalDateTime.parse("2016-12-05T09:42");
             assert.equal(utils.validateJsonDates(testInputDates, testDateTime), false);
+        })
+
+    });
+
+
+    describe("Business logic price generation tests", function() {
+
+        it("modified sign function tests", function() {
+            assert.equal(utils.modifiedSign(-9), 0);
+            assert.equal(utils.modifiedSign(0), 0);
+            assert.equal(utils.modifiedSign(314), 314);
+
+        });
+
+        it("it should calculate the correct price and discount (0 discount)", function() {
+            const appStartTime = LocalDateTime.now();
+            const parkTime = appStartTime.plusHours(1);
+            assert.deepEqual(utils.price(parkTime, appStartTime, 2, 1.8, 20), T.Tuple2(1.8, 0));
+        })
+
+        it("it should calculate the correct price and discount ", function() {
+            const appStartTime = LocalDateTime.now();
+            const parkTime = appStartTime.plusHours(1);
+
+            assert.deepEqual(utils.price(parkTime, appStartTime, 5, 1.8, 20), T.Tuple2(1.8 * 4, 20));
+        })
+
+        it("should calculate the number of cars, total value of income and total discount", function() {
+            const appStartTime = LocalDateTime.now();
+            const parkTime1 = appStartTime.plusHours(1);
+            const parkTime2 = appStartTime.plusHours(3);
+            const parkTime3 = appStartTime.plusHours(5);
+
+            const array_ = [{
+                "x": parkTime1
+            }, {
+                "x": parkTime2
+            }, {
+                "x": parkTime3
+            }]
+            assert.deepEqual(utils.totalPrice(array_, "x", appStartTime, 10, 1.8, 20), T.Tuple3(37.8, 240, 3));
         })
 
     });
