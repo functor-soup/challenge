@@ -24,3 +24,17 @@
  - At the start of the app, the validation has to be done synchronously however the library used for xml to json is an async call. While it maybe be 
    the case that at every other instance of time after validation of the xml structure and conversion,  that would make sense, at the very start it does not
    make sense.
+
+
+### Story 2
+
+ - To avoid if and else statements which would otherwise be used to account for cases where elapsed time since the start of the app does not include 
+    certain parking times, a modified version of the mathematical `sign` function is used wherein only positive numbers would pass through (this modified
+   function does not include the use of if/else statements)
+
+### Story 2 and Story 3
+
+ - The functions responsible for calculations prices and discounts return tuples (non-native t javascript, library exists for that thankfully) so 
+   to generalize
+
+ 
