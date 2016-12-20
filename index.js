@@ -6,7 +6,7 @@ const joda = require("js-joda");
 const LocalDateTime = joda.ZonedDateTime;
 const parseString = require('xml2json-light').xml2json;
 const express = require("express");
-var app = express();
+const app = express();
 const args = require("yargs")
     .option('p', {
         alias: 'port',
@@ -51,14 +51,16 @@ const price = config.price;
 const validate = R.curry(utils.validateJson)(R.__, config.maxSpaces);
 const validateDates = R.curry(utils.validateJsonDates)(R.__, appStartTime);
 
-const state = utils.validateXML(fileStrings[0], fileStrings[1])
-    .bind(function(xmlString) {
+// NOTE: xml validation used to be here till a weird correlation
+// between xmllint and not working of the server was discovered
+// shame really !!!
+const state = (function(){
         const lensPath = R.lensPath(['cars', 'car']);
-        const data = parseString(xmlString);
+        const data = parseString(fileStrings[1]);
         const view = R.view(lensPath, data);
         // tranform datetime strings into date time objects
         return M.Either.Right(utils.transformDateTime(view, R.lensProp('parkingtime')));
-    })
+    }())
     .bind(function(view) {
         const lens = R.lensProp('parkinglotid');
         return utils.validateAttributeValue(view, lens, validate,
@@ -79,11 +81,12 @@ const state = utils.validateXML(fileStrings[0], fileStrings[1])
         }, x);
     });
 
-app.get("/inventory/:time", function(req, res) {
+
+app .get("/inventory/:time", function(req, res) {
     const T = req.params.time;
-    const state = R.compose(R.flatten, R.values)(state);
-    if (T.match(/^\d+\.{1}\d*$/)) {
-        const result = utils.totalPrice(state, "parkingtime",
+    const state_ = R.compose(R.flatten, R.values)(state);
+    if (T.match(/^\d+\.{0,1}\d*$/)) {
+        const result = utils.totalPrice(state_, "parkingtime",
             appStartTime, parseFloat(T), price, discountCents);
         const json = {
             "totalAmountOfCars": result._3,
@@ -100,16 +103,20 @@ app.get("/parkinglots/:id/cars/:time", function(req, res) {
     const T = req.params.time;
     const id = req.params.id;
 
-    if (T.match(/^\d+\.{1}\d*$/) && id.match(/^\d+$/)) {
-        const state = state[parseInt(id)];
-        const f = R.curry(utils.price)(R.__, appStartTime, parseFloat(T), price, discount);
+    if (R.keys(state).indexOf(id) < 0){
+	return res.status(400).end("parkinglotid is invalid");
+    };
+
+    if (T.match(/^\d+\.{0,1}\d*$/) && id.match(/^\d+$/)) {
+        const state_ = state[id];
+        const f = R.curry(utils.price)(R.__, appStartTime, parseFloat(T), price, discountCents);
         const result = R.reduce(function(acc, x) {
-            const output = f(x.parkingTime);
+            const output = f(x.parkingtime);
             return acc.concat(R.merge(x, {
                 "value": output._1,
                 "discountInCents": output._2
             }));
-        }, [], state);
+        }, [], state_);
 
         return res.status(200).end(JSON.stringify(result));
     }

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"node index.js -i cars.xml",
     "test": "node_modules/mocha/bin/mocha ./tests"
   },
   "repository": {

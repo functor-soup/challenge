@@ -37,4 +37,7 @@
  - The functions responsible for calculations prices and discounts return tuples (non-native t javascript, library exists for that thankfully) so 
    to generalize
 
- 
+ - Xmllint though working fine with everything else would cause the server to not listen to requests and exit silently 
+   though the function to validate xml based on a schema is removed from the main file, it still exists in the util lib.
+   Given more time, this will be solved.
+   
